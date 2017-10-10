@@ -27,11 +27,11 @@ class Hall:
                     headcount = headcount + 1;
                 else:
                     if 22 != headcount:
-                        print "parsed %d lines of header, was expecting 22" % (headcount)
+                        print("parsed %d lines of header, was expecting 22" % (headcount))
                     mode = 1;
             if 1 == mode:
                 if None == line or 0 == len(line):
-                    print
+                    print()
                     mode = 2
                 else:
                     line = line.replace("\n","");
