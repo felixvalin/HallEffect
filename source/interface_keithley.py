@@ -5,9 +5,14 @@ Spyder Editor
 This is a temporary script file.
 """
 
+"""Time is MISSING"""
+
+
 import keithley
 import time as t
 import numpy as np
+import spinmob as s
+import thermocouple as tc
 
 dmm= keithley.DMM()
 #print(dmm.about())
@@ -44,7 +49,7 @@ def retreive_hall(time=5, iterations=8): #give it a time interval
     init_time = t.time()
     
     for i in range(iterations):
-        print("Retreiving value {}...".format(i+1))
+        print("Retreiving value {}...".format(i+1 ))
         halls[i] = get_hall()
         times[i] = t.time()-init_time #time since started the experiment
         print("{:0.2e} [V]    {:0.2f} [s]".format(halls[i], times[i]))
@@ -52,21 +57,65 @@ def retreive_hall(time=5, iterations=8): #give it a time interval
         
     return halls, times
 
-def retreive_all(time=1, iterations=8): #give it a time interval
+def retreive_all(time=1, iterations=8, filename=None): #give it a time interval
+    if filename is None:
+        filename = raw_input("Save to (filename)?:  ")
+    else:
+        print("Saving to {}".format(filename))
 
-    times = np.zeros(iterations)
-    voltages = np.zeros(iterations)
+    d = s.data.databox()
+    labels = ["v{}".format(i+1) for i in range(8)]
+    labels.append("time")
+#    for i in range(iterations):
+#        d["v{}".format(i+1)] = []
+#    print(labels)
+    #d['time'] = []
+    d.ckeys = labels
+    
+    times = []#np.zeros(iterations)
+    voltages = []#np.zeros(iterations)
     init_time = t.time()
+    
+#    d.h
     
     for i in range(iterations):
         print("Retreiving value {}...".format(i+1))
-        voltages[i] = get_allVoltages()
-        times[i] = t.time()-init_time #time since started the experiment
+#        voltages[i] = get_allVoltages()
+        temp_volts = np.array(get_allVoltages())
+        temp_volts = np.append(temp_volts, t.time()-init_time)
+#        for i in range(len(temp_volts)):
+#            d['v{}'.format(i+1)].append_data_point(temp_volts[i])
+        d.append_data_point(temp_volts)
+        #Time might be a problem, since voltages are not measured simultaneously
+#        times[i] = t.time()-init_time #time since started the experiment
+#        d['time'].append_data_point(t.time()-init_time)
+        print(get_hall())
 #        print("{:0.2e} [V]    {:0.2f} [s]".format(halls[i], times[i]))
         t.sleep(time) #
+#    print(voltages)
+#    v1 = voltages[0::8]
+#    v2 = voltages[1::8]
+#    v3 = voltages[2::8]
+#    v4 = voltages[3::8]
+#    v5 = voltages[4::8]
+#    v6 = voltages[5::8]
+#    v7 = voltages[6::8]
+#    v8 = voltages[7::8]
+#    thermo = tc.Thermocouple
+#    temp = np.zeros(np.shape(v8))
+#    for i in range(len(v8)):
+#        temp[i] = thermo.toKelvin(v8[i])
+#    print(v1)
+#    voltages = [v1,v2,v3,v4,v5,v6,v7,temp]
+#    print(voltages)
+#        
+#    for i in range(len(voltages)):
+#        d.append_column(np.array(voltages[i]), labels[i])
+#    d.append_column(times)
     
-    v1 = 
+    d.save_file("../database/{}".format(filename))
         
     return voltages, times
         
-halls, times = retreive_hall()    
+#retreive_all(iterations=1,filename="test")    
+#data = s.data.load("../database/test")
