@@ -14,6 +14,10 @@ import numpy as np
 import spinmob as s
 import thermocouple as tc
 
+#import os
+#clear = lambda: os.system('clear')
+#clear()
+
 dmm= keithley.DMM()
 #print(dmm.about())
 #
@@ -57,9 +61,25 @@ def retreive_hall(time=5, iterations=8): #give it a time interval
         
     return halls, times
 
+#Just to set the temperature before doing the experiment
+def update_temp():
+    thermo = tc.Thermocouple()
+    while True:
+#        clear()
+        print("%0.2f K" %(thermo.toKelvin(get_temp())))
+        t.sleep(1)
+#        i = input("Enter text (or Enter to quit): ")
+#        if not i:
+#            break
+    return
+
+#Output filename should look like:
+#<BFIELD_STRENGHT>_<ANGLE_ON_SAMPLE>_<START_TEMP>.txt
 def retreive_all(time=1, iterations=8, filename=None): #give it a time interval
     if filename is None:
-        filename = raw_input("Save to (filename)?:  ")
+        print("\nIf B-Field is <0, start with 'n' instead of '-'!\n")
+        filename = raw_input("Save to (filename: <BFIELD_STRENGHT>_<ANGLE_ON_SAMPLE>_<START_TEMP>)?:  ")
+        filename += ".txt"
     else:
         print("Saving to {}".format(filename))
 
@@ -119,3 +139,4 @@ def retreive_all(time=1, iterations=8, filename=None): #give it a time interval
         
 #retreive_all(iterations=1,filename="test")    
 #data = s.data.load("../database/test")
+#update_temp()
