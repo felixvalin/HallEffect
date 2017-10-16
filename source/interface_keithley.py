@@ -7,6 +7,8 @@ This is a temporary script file.
 
 """Time is MISSING"""
 
+#git add -A && git commit -a -m "new update of Hall Angle" && git push origin
+
 
 import keithley
 import time as t
@@ -77,8 +79,9 @@ def update_temp():
 #<BFIELD_STRENGHT>_<ANGLE_ON_SAMPLE>_<START_TEMP>.txt
 def retreive_all(time=1, iterations=8, filename=None): #give it a time interval
     if filename is None:
-        print("\nIf B-Field is <0, start with 'n' instead of '-'!\n")
-        filename = raw_input("Save to (filename: <BFIELD_STRENGHT>_<ANGLE_ON_SAMPLE>_<START_TEMP>)?:  ")
+        print("\nIf B-Field is < 0, start with 'n' instead of '-'!\n")
+        print("\nUsual filename: <BFIELD_STRENGHT>_<ANGLE_ON_SAMPLE>_<START_TEMP>\n")
+        filename = raw_input("Save to (filename)?:  ")
         filename += ".txt"
     else:
         print("Saving to {}".format(filename))
@@ -92,17 +95,17 @@ def retreive_all(time=1, iterations=8, filename=None): #give it a time interval
     #d['time'] = []
     d.ckeys = labels
     
-    times = []#np.zeros(iterations)
-    voltages = []#np.zeros(iterations)
+    #times = []#np.zeros(iterations)
+    #voltages = []#np.zeros(iterations)
     init_time = t.time()
     
 #    d.h
     
     for i in range(iterations):
-        print("Retreiving value {}...".format(i+1))
+        print("\nRetreiving value {}...".format(i+1))
 #        voltages[i] = get_allVoltages()
         temp_volts = np.array(get_allVoltages())
-        temp_volts = np.append(temp_volts, t.time()-init_time)
+        temp_volts = np.append(temp_volts, np.round(t.time()-init_time, decimals=2))
 #        for i in range(len(temp_volts)):
 #            d['v{}'.format(i+1)].append_data_point(temp_volts[i])
         d.append_data_point(temp_volts)
@@ -135,7 +138,7 @@ def retreive_all(time=1, iterations=8, filename=None): #give it a time interval
     
     d.save_file("../database/{}".format(filename))
         
-    return voltages, times
+    return #voltages, times
         
 #retreive_all(iterations=1,filename="test")    
 #data = s.data.load("../database/test")
