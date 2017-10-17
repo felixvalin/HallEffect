@@ -7,12 +7,18 @@ This is a temporary script file.
 
 """Time is MISSING"""
 
+#git add -A && git commit -a -m "new update of Hall Angle" && git push origin
+
 
 import keithley
 import time as t
 import numpy as np
 import spinmob as s
 import thermocouple as tc
+
+#import os
+#clear = lambda: os.system('clear')
+#clear()
 
 dmm= keithley.DMM()
 #print(dmm.about())
@@ -57,11 +63,39 @@ def retreive_hall(time=5, iterations=8): #give it a time interval
         
     return halls, times
 
-def retreive_all(time=1, iterations=8, filename=None): #give it a time interval
+#Just to set the temperature before doing the experiment
+def update_temp():
+    thermo = tc.Thermocouple()
+    while True:
+#        clear()
+        print("%0.2f K" %(thermo.toKelvin(get_temp())))
+        t.sleep(1)
+#        i = input("Enter text (or Enter to quit): ")
+#        if not i:
+#            break
+    return
+
+#Output filename should look like:
+#<BFIELD_STRENGHT>_<ANGLE_ON_SAMPLE>_<START_TEMP>.txt
+def retreive_all(time=1, iterations=8, filename=None, foldername=None): #give it a time interval
     if filename is None:
+        print("\nIf B-Field is < 0, start with 'n' instead of '-'!\n")
+        print("\nUsual filename: <BFIELD_STRENGHT>_<ANGLE_ON_SAMPLE>_<START_TEMP>\n")
         filename = raw_input("Save to (filename)?:  ")
+        filename += ".txt"
     else:
-        print("Saving to {}".format(filename))
+        print("Saving to {}".format(foldername))
+
+    if foldername is None:
+        #print("\nIf B-Field is < 0, start with 'n' instead of '-'!\n")
+        #print("\nUsual filename: <BFIELD_STRENGHT>_<ANGLE_ON_SAMPLE>_<START_TEMP>\n")
+        foldername = raw_input("\nCreate new folder?:  ")
+        foldername += ".txt"
+    else:
+        print("Creating {}".format(foldername))
+
+    os.mkdir("../database/{}/".format(foldername))
+
 
     d = s.data.databox()
     labels = ["v{}".format(i+1) for i in range(8)]
@@ -72,17 +106,17 @@ def retreive_all(time=1, iterations=8, filename=None): #give it a time interval
     #d['time'] = []
     d.ckeys = labels
     
-    times = []#np.zeros(iterations)
-    voltages = []#np.zeros(iterations)
+    #times = []#np.zeros(iterations)
+    #voltages = []#np.zeros(iterations)
     init_time = t.time()
     
 #    d.h
     
     for i in range(iterations):
-        print("Retreiving value {}...".format(i+1))
+        print("\nRetreiving value {}...".format(i+1))
 #        voltages[i] = get_allVoltages()
         temp_volts = np.array(get_allVoltages())
-        temp_volts = np.append(temp_volts, t.time()-init_time)
+        temp_volts = np.append(temp_volts, np.round(t.time()-init_time, decimals=2))
 #        for i in range(len(temp_volts)):
 #            d['v{}'.format(i+1)].append_data_point(temp_volts[i])
         d.append_data_point(temp_volts)
@@ -113,9 +147,10 @@ def retreive_all(time=1, iterations=8, filename=None): #give it a time interval
 #        d.append_column(np.array(voltages[i]), labels[i])
 #    d.append_column(times)
     
-    d.save_file("../database/{}".format(filename))
+    d.save_file("../database/{}/{}".format(foldername,filename))
         
-    return voltages, times
+    return #voltages, times
         
 #retreive_all(iterations=1,filename="test")    
 #data = s.data.load("../database/test")
+#update_temp()
