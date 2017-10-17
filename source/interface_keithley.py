@@ -77,14 +77,25 @@ def update_temp():
 
 #Output filename should look like:
 #<BFIELD_STRENGHT>_<ANGLE_ON_SAMPLE>_<START_TEMP>.txt
-def retreive_all(time=1, iterations=8, filename=None): #give it a time interval
+def retreive_all(time=1, iterations=8, filename=None, foldername=None): #give it a time interval
     if filename is None:
         print("\nIf B-Field is < 0, start with 'n' instead of '-'!\n")
         print("\nUsual filename: <BFIELD_STRENGHT>_<ANGLE_ON_SAMPLE>_<START_TEMP>\n")
         filename = raw_input("Save to (filename)?:  ")
         filename += ".txt"
     else:
-        print("Saving to {}".format(filename))
+        print("Saving to {}".format(foldername))
+
+    if foldername is None:
+        #print("\nIf B-Field is < 0, start with 'n' instead of '-'!\n")
+        #print("\nUsual filename: <BFIELD_STRENGHT>_<ANGLE_ON_SAMPLE>_<START_TEMP>\n")
+        foldername = raw_input("\nCreate new folder?:  ")
+        foldername += ".txt"
+    else:
+        print("Creating {}".format(foldername))
+
+    os.mkdir("../database/{}/".format(foldername))
+
 
     d = s.data.databox()
     labels = ["v{}".format(i+1) for i in range(8)]
@@ -136,7 +147,7 @@ def retreive_all(time=1, iterations=8, filename=None): #give it a time interval
 #        d.append_column(np.array(voltages[i]), labels[i])
 #    d.append_column(times)
     
-    d.save_file("../database/{}".format(filename))
+    d.save_file("../database/{}/{}".format(foldername,filename))
         
     return #voltages, times
         
