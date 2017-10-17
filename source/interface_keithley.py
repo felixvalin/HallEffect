@@ -15,6 +15,7 @@ import time as t
 import numpy as np
 import spinmob as s
 import thermocouple as tc
+#import os
 
 #import os
 #clear = lambda: os.system('clear')
@@ -78,6 +79,7 @@ def update_temp():
 #Output filename should look like:
 #<BFIELD_STRENGHT>_<ANGLE_ON_SAMPLE>_<START_TEMP>.txt
 def retreive_all(time=1, iterations=8, filename=None, foldername=None): #give it a time interval
+   
     if filename is None:
         print("\nIf B-Field is < 0, start with 'n' instead of '-'!\n")
         print("\nUsual filename: <BFIELD_STRENGHT>_<ANGLE_ON_SAMPLE>_<START_TEMP>\n")
@@ -86,15 +88,15 @@ def retreive_all(time=1, iterations=8, filename=None, foldername=None): #give it
     else:
         print("Saving to {}".format(foldername))
 
-    if foldername is None:
-        #print("\nIf B-Field is < 0, start with 'n' instead of '-'!\n")
-        #print("\nUsual filename: <BFIELD_STRENGHT>_<ANGLE_ON_SAMPLE>_<START_TEMP>\n")
-        foldername = raw_input("\nCreate new folder?:  ")
-        foldername += ".txt"
-    else:
-        print("Creating {}".format(foldername))
-
-    os.mkdir("../database/{}/".format(foldername))
+#    if foldername is None:
+#        #print("\nIf B-Field is < 0, start with 'n' instead of '-'!\n")
+#        #print("\nUsual filename: <BFIELD_STRENGHT>_<ANGLE_ON_SAMPLE>_<START_TEMP>\n")
+#        foldername = raw_input("\nCreate new folder?:  ")
+#        foldername += ".txt"
+#    else:
+#        print("Creating {}".format(foldername))
+#
+#    os.mkdir("../database/{}/".format(foldername))
 
 
     d = s.data.databox()
@@ -147,10 +149,12 @@ def retreive_all(time=1, iterations=8, filename=None, foldername=None): #give it
 #        d.append_column(np.array(voltages[i]), labels[i])
 #    d.append_column(times)
     
-    d.save_file("../database/{}/{}".format(foldername,filename))
+#    d.save_file("../database/{}/{}".format(foldername,filename))
+    d.save_file("../database/{}".format(filename))
         
     return #voltages, times
         
 #retreive_all(iterations=1,filename="test")    
 #data = s.data.load("../database/test")
 #update_temp()
+retreive_all()
