@@ -18,17 +18,17 @@ matplotlib.rc('font', **font)
 err_volt = 0.01
 err_volt *= np.sqrt(2)
 
-os.chdir("../database/hall_angle/")
+os.chdir("../database/")
 
-paths = glob.glob("{}".format(file_path))
+paths = glob.glob("*hall*")
 
 angles = np.zeros(len(paths))
-volt_diffs = np.zeros((2,len(paths)[0]))
+volt_diffs = np.zeros((2,len(paths)))
 
 for i, path in enumerate(paths):
     d = s.data.load(path)
     #times = d['time']
-    angles[i] = int(path.split()[1])
+    angles[i] = int(path.split('_')[0])
     v1_mean = np.mean(d['v1'])
     v1_std = np.std(d['v1'])
     v2_mean = np.mean(d['v2'])
@@ -37,11 +37,14 @@ for i, path in enumerate(paths):
     volt_diffs[0][i] = v2_mean - v1_mean
     volt_diffs[1][i] = np.sqrt(v1_std**2+v2_std**2)
     #volt_diff = d['v2'] - d['v1']
+    print("Done with iteration {}".format(i))
 
-fitter = s.data.fitter(f='a*x+b', p='a=1, b=0')
+fitter = s.data.fitter(f='a*sin(w*x+b)+c', p='a=0.05, w=0.010, b=0, c=0')
 fitter.set_data(xdata=angles, ydata=volt_diffs[0], eydata=volt_diffs[1])
 fitter.fit()
 plt.xlabel('Angle [deg]')
-plt.ylabel('Voltage Difference')
+plt.ylabel('Voltage Difference [V]')
 plt.savefig('../assets/figures/hall_angle_fit.svg')
-
+plt.show()
+fitter.ginput()
+plt.close()
