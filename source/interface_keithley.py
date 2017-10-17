@@ -86,7 +86,7 @@ def retreive_all(time=1, iterations=8, filename=None, foldername=None): #give it
         filename = raw_input("Save to (filename)?:  ")
         filename += ".txt"
     else:
-        print("Saving to {}".format(foldername))
+        print("Saving to {}".format(filename))
 
 #    if foldername is None:
 #        #print("\nIf B-Field is < 0, start with 'n' instead of '-'!\n")
@@ -157,4 +157,14 @@ def retreive_all(time=1, iterations=8, filename=None, foldername=None): #give it
 #retreive_all(iterations=1,filename="test")    
 #data = s.data.load("../database/test")
 #update_temp()
-retreive_all()
+datasets = np.linspace(0,360,19)
+
+for angle in datasets:
+    angle = np.int(angle)
+    filename = "{}_hall_angle".format(angle)
+    print("\n-------------------------------------------\n")
+    print("Make sure the apparatus is setup at {} [deg]".format(angle))
+    raw_input("Press Enter to continue")
+    retreive_all(filename=filename)
+#    print("\n-------------------------------------------\n")
+
