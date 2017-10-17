@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cd ../database/
+for x in *hall_angle* ; do
+	mv "$x" "${x%.djvu}.txt"; 
+done
