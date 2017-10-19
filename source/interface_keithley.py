@@ -15,7 +15,7 @@ import time as t
 import numpy as np
 import spinmob as s
 import thermocouple as tc
-#import os
+import os
 
 #import os
 #clear = lambda: os.system('clear')
@@ -78,7 +78,7 @@ def update_temp():
 
 #Output filename should look like:
 #<BFIELD_STRENGHT>_<ANGLE_ON_SAMPLE>_<START_TEMP>.txt
-def retreive_all(time=1, iterations=8, filename=None, foldername=None): #give it a time interval
+def retreive_all(time=1, iterations=8, sleep= False, filename=None, foldername=None): #give it a time interval
    
     if filename is None:
         print("\nIf B-Field is < 0, start with 'n' instead of '-'!\n")
@@ -88,15 +88,20 @@ def retreive_all(time=1, iterations=8, filename=None, foldername=None): #give it
     else:
         print("Saving to {}".format(filename))
 
-#    if foldername is None:
-#        #print("\nIf B-Field is < 0, start with 'n' instead of '-'!\n")
-#        #print("\nUsual filename: <BFIELD_STRENGHT>_<ANGLE_ON_SAMPLE>_<START_TEMP>\n")
-#        foldername = raw_input("\nCreate new folder?:  ")
+    if foldername is None:
+        #print("\nIf B-Field is < 0, start with 'n' instead of '-'!\n")
+        #print("\nUsual filename: <BFIELD_STRENGHT>_<ANGLE_ON_SAMPLE>_<START_TEMP>\n")
+        foldername = raw_input("\nCreate new folder?:  ")
 #        foldername += ".txt"
-#    else:
-#        print("Creating {}".format(foldername))
-#
-#    os.mkdir("../database/{}/".format(foldername))
+    else:
+        print("Creating {}".format(foldername))
+        
+    try:
+        os.mkdir("../database/{}/".format(foldername))
+        print("Created!")
+    except OSError:
+        print("Folder already exists!")
+        pass
 
 
     d = s.data.databox()
@@ -113,21 +118,50 @@ def retreive_all(time=1, iterations=8, filename=None, foldername=None): #give it
     init_time = t.time()
     
 #    d.h
-    
-    for i in range(iterations):
-        print("\nRetreiving value {}...".format(i+1))
-#        voltages[i] = get_allVoltages()
-        temp_volts = np.array(get_allVoltages())
-        temp_volts = np.append(temp_volts, np.round(t.time()-init_time, decimals=2))
-#        for i in range(len(temp_volts)):
-#            d['v{}'.format(i+1)].append_data_point(temp_volts[i])
-        d.append_data_point(temp_volts)
-        #Time might be a problem, since voltages are not measured simultaneously
-#        times[i] = t.time()-init_time #time since started the experiment
-#        d['time'].append_data_point(t.time()-init_time)
-        print(get_hall())
-#        print("{:0.2e} [V]    {:0.2f} [s]".format(halls[i], times[i]))
-        t.sleep(time) #
+    if iterations == 0:
+        i=0#For the counter to work!
+        while True:
+            print("\nRetreiving value {}...".format(i+1))
+    #        voltages[i] = get_allVoltages()
+            temp_volts = np.array(get_allVoltages())
+            temp_volts = np.append(temp_volts, np.round(t.time()-init_time, decimals=2))
+            thermo = tc.Thermocouple()
+            temperature = np.float(thermo.toKelvin(temp_volts[7]))
+            print("TEMPERATURE: {0:0.2f} K".format(temperature))
+    #        for i in range(len(temp_volts)):
+    #            d['v{}'.format(i+1)].append_data_point(temp_volts[i])
+            d.append_data_point(temp_volts)
+            #Time might be a problem, since voltages are not measured simultaneously
+    #        times[i] = t.time()-init_time #time since started the experiment
+    #        d['time'].append_data_point(t.time()-init_time)
+#            print(get_hall())
+    #        print("{:0.2e} [V]    {:0.2f} [s]".format(halls[i], times[i]))
+            if sleep:
+                if i<20:
+                    t.sleep(time) #This creates a pause in the loop after a few iterations
+            if temperature>=380:#This stops the loop if we exceed a given temperature
+                print("Exceeded maximal temperature!\nMax Temp: {0:0.2f} K\nCurrent Temp: {1:0.2f} K".format(380, temperature))
+                break
+            i+=1#For counting measures
+    else:
+        for i in range(iterations):
+            print("\nRetreiving value {}...".format(i+1))
+    #        voltages[i] = get_allVoltages()
+            temp_volts = np.array(get_allVoltages())
+            temp_volts = np.append(temp_volts, np.round(t.time()-init_time, decimals=2))
+            thermo = tc.Thermocouple()
+            print("TEMPERATURE: {} K".format(thermo.toKelvin(temp_volts[7])))
+    #        for i in range(len(temp_volts)):
+    #            d['v{}'.format(i+1)].append_data_point(temp_volts[i])
+            d.append_data_point(temp_volts)
+            #Time might be a problem, since voltages are not measured simultaneously
+    #        times[i] = t.time()-init_time #time since started the experiment
+    #        d['time'].append_data_point(t.time()-init_time)
+            print(get_hall())
+    #        print("{:0.2e} [V]    {:0.2f} [s]".format(halls[i], times[i]))
+#            if sleep:
+#                if i<20
+            t.sleep(time) #
 #    print(voltages)
 #    v1 = voltages[0::8]
 #    v2 = voltages[1::8]
@@ -157,14 +191,17 @@ def retreive_all(time=1, iterations=8, filename=None, foldername=None): #give it
 #retreive_all(iterations=1,filename="test")    
 #data = s.data.load("../database/test")
 #update_temp()
-datasets = np.linspace(0,360,19)
-
-for angle in datasets:
-    angle = np.int(angle)
-    filename = "{}_hall_angle".format(angle)
-    print("\n-------------------------------------------\n")
-    print("Make sure the apparatus is setup at {} [deg]".format(angle))
-    raw_input("Press Enter to continue")
-    retreive_all(filename=filename)
+#datasets = np.linspace(0,360,19)
+#
+#for angle in datasets:
+#    angle = np.int(angle)
+#    filename = "{}_hall_angle".format(angle)
 #    print("\n-------------------------------------------\n")
+#    print("Make sure the apparatus is setup at {} [deg]".format(angle))
+#    raw_input("Press Enter to continue")
+#    retreive_all(filename=filename)
+##    print("\n-------------------------------------------\n")
+
+#For cool to hot!
+retreive_all(time=4, iterations=0, sleep=True, foldername="Nitrogen_Run_191017_1")
 
