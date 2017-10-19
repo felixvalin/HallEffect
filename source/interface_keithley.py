@@ -89,39 +89,18 @@ def retreive_all(time=1, iterations=8, sleep= False, filename=None, foldername=N
         filename += ".txt"
         print("Saving to {}".format(filename))
 
-<<<<<<< HEAD
-    if foldername is None:
-        #print("\nIf B-Field is < 0, start with 'n' instead of '-'!\n")
-        #print("\nUsual filename: <BFIELD_STRENGHT>_<ANGLE_ON_SAMPLE>_<START_TEMP>\n")
-        foldername = raw_input("\nCreate new folder?:  ")
-#        foldername += ".txt"
-    else:
-        print("Creating {}".format(foldername))
-        
-    try:
-        os.mkdir("../database/{}/".format(foldername))
-        print("Created!")
-    except OSError:
-        print("Folder already exists!")
-        pass
-=======
-
     if foldername is None:
         #print("\nIf B-Field is < 0, start with 'n' instead of '-'!\n")
         #print("\nUsual filename: <BFIELD_STRENGHT>_<ANGLE_ON_SAMPLE>_<START_TEMP>\n")
         foldername = raw_input("\nNew folder name?:  ")
     else:
-        print("Creating {}".format(foldername))
+        print("\nCreating {}".format(foldername))
 
     try:
         os.mkdir("../database/{}/".format(foldername))
     except OSError:
         print("Folder already exists!")
         pass
-
-
->>>>>>> bf631ae4d04c5babd653d57ca141ecce91a84f50
-
 
     d = s.data.databox()
     labels = ["v{}".format(i+1) for i in range(8)]
@@ -161,6 +140,8 @@ def retreive_all(time=1, iterations=8, sleep= False, filename=None, foldername=N
             if temperature>=380:#This stops the loop if we exceed a given temperature
                 print("Exceeded maximal temperature!\nMax Temp: {0:0.2f} K\nCurrent Temp: {1:0.2f} K".format(380, temperature))
                 break
+            if temp_volts[-1] > 7200:
+                print("Exceeded maximal run time (2hr)!. Stopping...")
             i+=1#For counting measures
     else:
         for i in range(iterations):
