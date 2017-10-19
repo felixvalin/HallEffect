@@ -86,8 +86,10 @@ def retreive_all(time=1, iterations=8, sleep= False, filename=None, foldername=N
         filename = raw_input("Save to (filename)?:  ")
         filename += ".txt"
     else:
+        filename += ".txt"
         print("Saving to {}".format(filename))
 
+<<<<<<< HEAD
     if foldername is None:
         #print("\nIf B-Field is < 0, start with 'n' instead of '-'!\n")
         #print("\nUsual filename: <BFIELD_STRENGHT>_<ANGLE_ON_SAMPLE>_<START_TEMP>\n")
@@ -102,6 +104,23 @@ def retreive_all(time=1, iterations=8, sleep= False, filename=None, foldername=N
     except OSError:
         print("Folder already exists!")
         pass
+=======
+
+    if foldername is None:
+        #print("\nIf B-Field is < 0, start with 'n' instead of '-'!\n")
+        #print("\nUsual filename: <BFIELD_STRENGHT>_<ANGLE_ON_SAMPLE>_<START_TEMP>\n")
+        foldername = raw_input("\nNew folder name?:  ")
+    else:
+        print("Creating {}".format(foldername))
+
+    try:
+        os.mkdir("../database/{}/".format(foldername))
+    except OSError:
+        print("Folder already exists!")
+        pass
+
+
+>>>>>>> bf631ae4d04c5babd653d57ca141ecce91a84f50
 
 
     d = s.data.databox()
