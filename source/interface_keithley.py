@@ -96,7 +96,7 @@ def retreive_all(time=1, iterations=8, sleep= False, filename=None, foldername=N
         #print("\nUsual filename: <BFIELD_STRENGHT>_<ANGLE_ON_SAMPLE>_<START_TEMP>\n")
         foldername = raw_input("\nNew folder name?:  ")
     else:
-        print("\nCreating {}".format(foldername))
+        print("\nCreating folder {}".format(foldername))
 
     try:
         os.mkdir("../database/{}/".format(foldername))
@@ -137,7 +137,7 @@ def retreive_all(time=1, iterations=8, sleep= False, filename=None, foldername=N
 #            print(get_hall())
     #        print("{:0.2e} [V]    {:0.2f} [s]".format(halls[i], times[i]))
             if sleep:
-                if i<20:
+                if i<100:
                     t.sleep(time) #This creates a pause in the loop after a few iterations
             if temperature>=380:#This stops the loop if we exceed a given temperature
                 print("Exceeded maximal temperature!\nMax Temp: {0:0.2f} K\nCurrent Temp: {1:0.2f} K".format(380, temperature))
