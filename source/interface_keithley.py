@@ -137,7 +137,7 @@ def retreive_all(time=1, iterations=8, sleep= False, filename=None, foldername=N
 #            print(get_hall())
     #        print("{:0.2e} [V]    {:0.2f} [s]".format(halls[i], times[i]))
             if sleep:
-                if i<100:
+                if i>100:
                     t.sleep(time) #This creates a pause in the loop after a few iterations
             if temperature>=380:#This stops the loop if we exceed a given temperature
                 print("Exceeded maximal temperature!\nMax Temp: {0:0.2f} K\nCurrent Temp: {1:0.2f} K".format(380, temperature))
@@ -185,8 +185,8 @@ def retreive_all(time=1, iterations=8, sleep= False, filename=None, foldername=N
 #        d.append_column(np.array(voltages[i]), labels[i])
 #    d.append_column(times)
     
-#    d.save_file("../database/{}/{}".format(foldername,filename))
-    d.save_file("../database/{}".format(filename))
+    d.save_file("../database/{}/{}".format(foldername,filename))
+#    d.save_file("../database/{}".format(filename))
         
     return #voltages, times
         
@@ -205,5 +205,5 @@ def retreive_all(time=1, iterations=8, sleep= False, filename=None, foldername=N
 ##    print("\n-------------------------------------------\n")
 
 #For cool to hot!
-retreive_all(time=4, iterations=0, sleep=True, foldername="Nitrogen_Run_191017_1")
-
+retreive_all(iterations=0, foldername="Nitrogen_Run_191017_1")
+#retreive_all(time=4, iterations=0, sleep=True, foldername="Nitrogen_Run_191017_1")
