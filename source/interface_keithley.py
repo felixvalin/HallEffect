@@ -5,9 +5,11 @@ Spyder Editor
 This is a temporary script file.
 """
 
-"""Time is MISSING"""
+"""Don't Forget to GIT PULL before doing anything !!!"""
 
-#git add -A && git commit -a -m "new update of Hall Angle" && git push origin
+#git pull origin master
+
+#git add -A && git commit -a -m "new update of Hall Angle" && git push origin master
 
 
 import keithley
@@ -99,7 +101,7 @@ def retreive_all(time=1, iterations=8, sleep= False, filename=None, foldername=N
     try:
         os.mkdir("../database/{}/".format(foldername))
     except OSError:
-        print("Folder already exists!")
+        print("Folder already exists! Continuing...")
         pass
 
     d = s.data.databox()
