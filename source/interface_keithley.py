@@ -18,6 +18,7 @@ import numpy as np
 import spinmob as s
 import thermocouple as tc
 import os
+import matplotlib.pyplot as plt
 
 #import os
 #clear = lambda: os.system('clear')
@@ -68,14 +69,23 @@ def retreive_hall(time=5, iterations=8): #give it a time interval
 
 #Just to set the temperature before doing the experiment
 def update_temp():
-    thermo = tc.Thermocouple()
-    while True:
-#        clear()
-        print("%0.2f K" %(thermo.toKelvin(get_temp())))
-        t.sleep(1)
-#        i = input("Enter text (or Enter to quit): ")
-#        if not i:
-#            break
+    thermo = tc.Thermocouple()    
+    plt.figure()
+    i = 0
+    try:
+        while True:
+    #        clear()
+            temp = np.float(thermo.toKelvin(get_temp()))
+            print("{0:0.2f} K".format(temp))
+            plt.plot(i, temp, 'b+')
+            plt.pause(1)
+            i+=1
+    #        i = input("Enter text (or Enter to quit): ")
+    #        if not i:
+    #            break
+    except KeyboardInterrupt:
+        pass
+    
     return
 
 #Output filename should look like:
@@ -119,31 +129,52 @@ def retreive_all(time=1, iterations=8, sleep= False, filename=None, foldername=N
 #    d.h
     if iterations == 0:
         i=0#For the counter to work!
-        while True:
-            print("\nRetreiving value {}...".format(i+1))
-    #        voltages[i] = get_allVoltages()
-            temp_volts = np.array(get_allVoltages())
-            temp_volts = np.append(temp_volts, np.round(t.time()-init_time, decimals=2))
-            thermo = tc.Thermocouple()
-            temperature = np.float(thermo.toKelvin(temp_volts[7]))
-            print("TEMPERATURE: {0:0.2f} K".format(temperature))
-    #        for i in range(len(temp_volts)):
-    #            d['v{}'.format(i+1)].append_data_point(temp_volts[i])
-            d.append_data_point(temp_volts)
-            #Time might be a problem, since voltages are not measured simultaneously
-    #        times[i] = t.time()-init_time #time since started the experiment
-    #        d['time'].append_data_point(t.time()-init_time)
-#            print(get_hall())
-    #        print("{:0.2e} [V]    {:0.2f} [s]".format(halls[i], times[i]))
-            if sleep:
-                if i>100:
-                    t.sleep(time) #This creates a pause in the loop after a few iterations
-            if temperature>=380:#This stops the loop if we exceed a given temperature
-                print("Exceeded maximal temperature!\nMax Temp: {0:0.2f} K\nCurrent Temp: {1:0.2f} K".format(380, temperature))
-                break
-            if temp_volts[-1] > 7200:
-                print("Exceeded maximal run time (2hr)!. Stopping...")
-            i+=1#For counting measures
+        plt.figure()
+        plt.xlabel("Time [s]")
+        plt.ylabel("Temperature [K]")
+        
+        previous_temperature = 0
+        previous_time = 0
+        
+        try:
+            while True:
+                print("\nRetreiving value {}...".format(i+1))
+        #        voltages[i] = get_allVoltages()
+                temp_volts = np.array(get_allVoltages())
+                time = t.time()-init_time
+                temp_volts = np.append(temp_volts, np.round(time, decimals=2))
+                thermo = tc.Thermocouple()
+                temperature = np.float(thermo.toKelvin(temp_volts[7]))
+                plt.plot(time, temperature, 'b+')
+                print("SLOPE: {0:0.3f} K/s".format((temperature-previous_temperature)/(time - previous_time)))
+                print("TEMPERATURE: {0:0.2f} K".format(temperature))
+        #        for i in range(len(temp_volts)):
+        #            d['v{}'.format(i+1)].append_data_point(temp_volts[i])
+                d.append_data_point(temp_volts)
+                previous_temperature = temperature
+                previous_time = time
+                plt.pause(1)
+                
+                #Time might be a problem, since voltages are not measured simultaneously
+        #        times[i] = t.time()-init_time #time since started the experiment
+        #        d['time'].append_data_point(t.time()-init_time)
+    #            print(get_hall())
+        #        print("{:0.2e} [V]    {:0.2f} [s]".format(halls[i], times[i]))
+                if sleep:
+                    if i>100:
+                        t.sleep(time) #This creates a pause in the loop after a few iterations
+                if temperature>=380:#This stops the loop if we exceed a given temperature
+                    print("Exceeded maximal temperature!\nMax Temp: {0:0.2f} K\nCurrent Temp: {1:0.2f} K".format(380, temperature))
+                    break
+                if temp_volts[-1] > 7200:
+                    print("Exceeded maximal run time (2hr)!. Stopping...")
+                i+=1#For counting measures
+        #This interrupts data taking and goes to save the file automatically
+        #instead of crashing
+        #USAGE: Ctrl-C
+        except KeyboardInterrupt:
+            print("Terminating...")
+            pass
     else:
         for i in range(iterations):
             print("\nRetreiving value {}...".format(i+1))
@@ -204,5 +235,7 @@ def retreive_all(time=1, iterations=8, sleep= False, filename=None, foldername=N
 ##    print("\n-------------------------------------------\n")
 
 #For cool to hot!
-retreive_all(iterations=0, foldername="Nitrogen_Run_191017_1")
+#retreive_all(iterations=0)
+#update_temp()
+retreive_all(iterations=0, foldername="nitrogenRun_241017")
 #retreive_all(time=4, iterations=0, sleep=True, foldername="Nitrogen_Run_191017_1")
