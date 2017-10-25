@@ -84,7 +84,6 @@ def retreive_all(time=1, iterations=8, sleep= False, filename=None, foldername=N
    
     if filename is None:
         print("\nIf B-Field is < 0, start with 'n' instead of '-'!\n")
-        print("\nUsual filename: <BFIELD_STRENGHT>_<ANGLE_ON_SAMPLE>_<START_TEMP>\n")
         filename = raw_input("Save to (filename)?:  ")
         filename += ".txt"
     else:
