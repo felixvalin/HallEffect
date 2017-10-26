@@ -71,6 +71,8 @@ def retreive_hall(time=5, iterations=8): #give it a time interval
 def update_temp():
     thermo = tc.Thermocouple()    
     plt.figure()
+    plt.xlabel("Time [s]")
+    plt.ylabel("Temperature [K]")
     i = 0
     try:
         while True:
@@ -90,7 +92,7 @@ def update_temp():
 
 #Output filename should look like:
 #<BFIELD_STRENGHT>_<ANGLE_ON_SAMPLE>_<START_TEMP>.txt
-def retreive_all(time=1, iterations=8, sleep= False, filename=None, foldername=None): #give it a time interval
+def retreive_all(time=1, iterations=0, sleep= False, filename=None, foldername=None): #give it a time interval
    
     if filename is None:
         print("\nIf B-Field is < 0, start with 'n' instead of '-'!\n")
@@ -171,6 +173,7 @@ def retreive_all(time=1, iterations=8, sleep= False, filename=None, foldername=N
                 i+=1#For counting measures
         #This interrupts data taking and goes to save the file automatically
         #instead of crashing
+        
         #USAGE: Ctrl-C
         except KeyboardInterrupt:
             print("Terminating...")
@@ -237,5 +240,5 @@ def retreive_all(time=1, iterations=8, sleep= False, filename=None, foldername=N
 #For cool to hot!
 #retreive_all(iterations=0)
 #update_temp()
-retreive_all(iterations=0, foldername="nitrogenRun_241017")
+#retreive_all(iterations=0, foldername="nitrogenRun_261017")
 #retreive_all(time=4, iterations=0, sleep=True, foldername="Nitrogen_Run_191017_1")
