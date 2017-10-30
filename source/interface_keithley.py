@@ -168,8 +168,10 @@ def retreive_all(time=1, iterations=0, sleep= False, filename=None, foldername=N
                 if temperature>=380:#This stops the loop if we exceed a given temperature
                     print("Exceeded maximal temperature!\nMax Temp: {0:0.2f} K\nCurrent Temp: {1:0.2f} K".format(380, temperature))
                     break
-                if temp_volts[-1] > 7200:
-                    print("Exceeded maximal run time (2hr)!. Stopping...")
+#                if temp_volts[-1] > 7200:
+                if temp_volts[-1] > 14400:
+#                    print("Exceeded maximal run time (2hr)!. Stopping...")
+                    print("Exceeded maximal run time (4hr)!. Stopping...")
                 i+=1#For counting measures
         #This interrupts data taking and goes to save the file automatically
         #instead of crashing
