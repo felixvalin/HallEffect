@@ -200,31 +200,8 @@ def retreive_all(time=1, iterations=0, sleep= False, filename=None, foldername=N
 #            if sleep:
 #                if i<20
             t.sleep(time) #
-#    print(voltages)
-#    v1 = voltages[0::8]
-#    v2 = voltages[1::8]
-#    v3 = voltages[2::8]
-#    v4 = voltages[3::8]
-#    v5 = voltages[4::8]
-#    v6 = voltages[5::8]
-    angles = np.linspace(0, 3
-                         
-                         
-#    v7 = voltages[6::8]
-#    v8 = voltages[7::8]
-#    thermo = tc.Thermocouple
-#    temp = np.zeros(np.shape(v8))
-#    for i in range(len(v8)):
-#        temp[i] = thermo.toKelvin(v8[i])
-#    print(v1)
-#    voltages = [v1,v2,v3,v4,v5,v6,v7,temp]
-#    print(voltages)
-#        
-#    for i in range(len(voltages)):
-#        d.append_column(np.array(voltages[i]), labels[i])
-#    d.append_column(times)
     
-    #print("Saving file to ../database/{}/{}".format(foldername,filename))    
+    print("Saving file to ../database/{}/{}".format(foldername,filename))    
     d.save_file("../database/{}/{}".format(foldername,filename))
     #d.save_file("../database/{}".format(filename))
         
@@ -267,6 +244,13 @@ def magneto_resistance():
         pass
     
     foldername = raw_input("\nWhere do we save the datafile?: ")
+    
+    try:
+        os.mkdir("../database/{}/".format(foldername))
+    except OSError:
+        print("Folder already exists! Continuing...")
+        pass
+
     print("Saving file to ../database/{}/magneto_resistance".format(foldername))
     d.save_file("../database/{}/magneto_resistance".format(foldername))
 
