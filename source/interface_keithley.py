@@ -172,6 +172,7 @@ def retreive_all(time=1, iterations=0, sleep= False, filename=None, foldername=N
                 if temp_volts[-1] > 14400:
 #                    print("Exceeded maximal run time (2hr)!. Stopping...")
                     print("Exceeded maximal run time (4hr)!. Stopping...")
+                    break
                 i+=1#For counting measures
         #This interrupts data taking and goes to save the file automatically
         #instead of crashing
@@ -206,6 +207,9 @@ def retreive_all(time=1, iterations=0, sleep= False, filename=None, foldername=N
 #    v4 = voltages[3::8]
 #    v5 = voltages[4::8]
 #    v6 = voltages[5::8]
+    angles = np.linspace(0, 3
+                         
+                         
 #    v7 = voltages[6::8]
 #    v8 = voltages[7::8]
 #    thermo = tc.Thermocouple
@@ -220,11 +224,54 @@ def retreive_all(time=1, iterations=0, sleep= False, filename=None, foldername=N
 #        d.append_column(np.array(voltages[i]), labels[i])
 #    d.append_column(times)
     
+    #print("Saving file to ../database/{}/{}".format(foldername,filename))    
     d.save_file("../database/{}/{}".format(foldername,filename))
-#    d.save_file("../database/{}".format(filename))
+    #d.save_file("../database/{}".format(filename))
         
     return #voltages, times
         
+def magneto_resistance():
+    angles = np.linspace(0, 320, 9)
+#    angles = [0]
+    field = np.linspace(0.1,0.5,5)
+    vfield = [0.04776,0.10052,0.15328,0.20604,0.2588]
+    d = s.data.databox()
+    labels = ["v{}".format(i+1) for i in range(8)]
+    labels.append("angle")
+    labels.append("field")
+    labels.append("volt_field")
+    d.ckeys = labels
+    print("---------------------------------")
+    try:    
+        for i,b in enumerate(vfield):
+            print("Set field to: {} [V]".format(b))
+            raw_input("Press any key when ready...\n")
+            #Since we'll change front/rear...
+            dmm= keithley.DMM()
+            print("")
+            
+            for a in angles:
+                print("Set angle to: {0:0.0f} [deg]".format(a))
+                raw_input("Press any key when ready...\n")
+                print("Retreiving data...")
+                for j in range(5):
+                    results = np.array(get_allVoltages())
+                    results = np.append(results, [a,field[i], b])
+                    print("{0:0d}: ".format(j))
+                    print(results)
+                    d.append_data_point(results)
+                print("---------------------------------")
+                
+    except KeyboardInterrupt:
+        print("!!!!!!!!!!!!!!\nTerminating...\n!!!!!!!!!!!!!!")
+        pass
+    
+    foldername = raw_input("\nWhere do we save the datafile?: ")
+    print("Saving file to ../database/{}/magneto_resistance".format(foldername))
+    d.save_file("../database/{}/magneto_resistance".format(foldername))
+
+
+
 #retreive_all(iterations=1,filename="test")    
 #data = s.data.load("../database/test")
 #update_temp()
