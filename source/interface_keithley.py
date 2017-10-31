@@ -172,6 +172,10 @@ def retreive_all(time=1, iterations=0, sleep= False, filename=None, foldername=N
                 if temp_volts[-1] > 14400:
 #                    print("Exceeded maximal run time (2hr)!. Stopping...")
                     print("Exceeded maximal run time (4hr)!. Stopping...")
+<<<<<<< HEAD
+=======
+                    break
+>>>>>>> e37d549140f5085723639ef97073e67bb728230f
                 i+=1#For counting measures
         #This interrupts data taking and goes to save the file automatically
         #instead of crashing
@@ -183,7 +187,13 @@ def retreive_all(time=1, iterations=0, sleep= False, filename=None, foldername=N
     else:
         for i in range(iterations):
             print("\nRetreiving value {}...".format(i+1))
+<<<<<<< HEAD
     #        voltages[i] = get_allVoltages()
+=======
+    #        voltages[i] = get_allVoltages()        except KeyboardInterrupt:
+            print("Terminating...")
+            pass
+>>>>>>> e37d549140f5085723639ef97073e67bb728230f
             temp_volts = np.array(get_allVoltages())
             temp_volts = np.append(temp_volts, np.round(t.time()-init_time, decimals=2))
             thermo = tc.Thermocouple()
@@ -215,7 +225,11 @@ def retreive_all(time=1, iterations=0, sleep= False, filename=None, foldername=N
 #    print(v1)
 #    voltages = [v1,v2,v3,v4,v5,v6,v7,temp]
 #    print(voltages)
+<<<<<<< HEAD
 #        
+=======
+#        foldername
+>>>>>>> e37d549140f5085723639ef97073e67bb728230f
 #    for i in range(len(voltages)):
 #        d.append_column(np.array(voltages[i]), labels[i])
 #    d.append_column(times)
@@ -225,6 +239,53 @@ def retreive_all(time=1, iterations=0, sleep= False, filename=None, foldername=N
         
     return #voltages, times
         
+<<<<<<< HEAD
+=======
+def magneto_resistance():
+    
+    volt = [0.174,0.128,0.092,0.051,0.013]
+    angles = np.linspace(0,320, 9)
+#    volt = [1]
+#    angles = [1]
+    
+    d = s.data.databox()
+    labels = ["v{}".format(i+1) for i in range(8)]
+    labels.append("volt")
+    labels.append("angle")
+    d.ckeys = labels
+    
+    try:
+        for v in volt:
+            print("Set volt to {} [V]".format(v))
+            raw_input("Press enter...")
+            dmm= keithley.DMM()
+            for a in angles:
+                print("Set angle to {} [deg]".format(a))
+                raw_input("Press enter...")
+                for i in range(3):
+                    print("{}: \n".format(i))
+                    results = np.array(get_allVoltages())
+                    results = np.append(results, [a, v])
+                    d.append_data_point(results)
+                    print(results)
+                    
+                
+    except KeyboardInterrupt:
+        print("Terminating...")
+        pass
+            
+    foldername = raw_input("Foldername? ")
+            
+    try:
+        os.mkdir("../database/{}/".format(foldername))
+    except OSError:
+        print("Folder already exists! Continuing...")
+        pass
+        
+    d.save_file("../database/{}/magneto_resistance.txt".format(foldername))
+
+
+>>>>>>> e37d549140f5085723639ef97073e67bb728230f
 #retreive_all(iterations=1,filename="test")    
 #data = s.data.load("../database/test")
 #update_temp()
