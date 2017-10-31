@@ -254,6 +254,8 @@ def magneto_resistance():
                     results = np.array(get_allVoltages())
                     results = np.append(results, [a, v])
                     d.append_data_point(results)
+                    print(results)
+                    
                 
     except KeyboardInterrupt:
         print("Terminating...")
