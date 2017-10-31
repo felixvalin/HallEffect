@@ -239,8 +239,6 @@ def retreive_all(time=1, iterations=0, sleep= False, filename=None, foldername=N
         
     return #voltages, times
         
-<<<<<<< HEAD
-=======
 def magneto_resistance():
     
     volt = [0.174,0.128,0.092,0.051,0.013]
@@ -284,8 +282,6 @@ def magneto_resistance():
         
     d.save_file("../database/{}/magneto_resistance.txt".format(foldername))
 
-
->>>>>>> e37d549140f5085723639ef97073e67bb728230f
 #retreive_all(iterations=1,filename="test")    
 #data = s.data.load("../database/test")
 #update_temp()
