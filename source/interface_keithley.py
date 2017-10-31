@@ -225,11 +225,8 @@ def retreive_all(time=1, iterations=0, sleep= False, filename=None, foldername=N
 #    print(v1)
 #    voltages = [v1,v2,v3,v4,v5,v6,v7,temp]
 #    print(voltages)
-<<<<<<< HEAD
 #        
-=======
 #        foldername
->>>>>>> e37d549140f5085723639ef97073e67bb728230f
 #    for i in range(len(voltages)):
 #        d.append_column(np.array(voltages[i]), labels[i])
 #    d.append_column(times)
