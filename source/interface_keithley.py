@@ -269,7 +269,7 @@ def mr():
                 
                 if a == 116:
                     v *= -1
-                print("\n-->Turn off DMM\n-->Set DMM to rear\n-->Done!")
+                print("\n-->Turn off DMM\n-->Set DMM to rear\n-->Turn on DMM\n-->Done!")
                 raw_input("Press enter whenever you're ready...")
 #                input("Press enter whenever you're ready...")
                 dmm = keithley.DMM()
