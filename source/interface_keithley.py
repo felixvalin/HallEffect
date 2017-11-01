@@ -25,6 +25,7 @@ import matplotlib.pyplot as plt
 #clear()
 
 dmm= keithley.DMM()
+
 #print(dmm.about())
 #
 #keithley.monitor(dmm)
@@ -69,6 +70,7 @@ def retreive_hall(time=5, iterations=8): #give it a time interval
 
 #Just to set the temperature before doing the experiment
 def update_temp():
+    dmm= keithley.DMM()
     thermo = tc.Thermocouple()    
     plt.figure()
     plt.xlabel("Time [s]")
@@ -94,6 +96,8 @@ def update_temp():
 #<BFIELD_STRENGHT>_<ANGLE_ON_SAMPLE>_<START_TEMP>.txt
 def retreive_all(time=1, iterations=0, sleep= False, filename=None, foldername=None): #give it a time interval
    
+    dmm= keithley.DMM()
+    
     if filename is None:
         print("\nIf B-Field is < 0, start with 'n' instead of '-'!\n")
         filename = raw_input("Save to (filename)?:  ")
@@ -172,10 +176,7 @@ def retreive_all(time=1, iterations=0, sleep= False, filename=None, foldername=N
                 if temp_volts[-1] > 14400:
 #                    print("Exceeded maximal run time (2hr)!. Stopping...")
                     print("Exceeded maximal run time (4hr)!. Stopping...")
-<<<<<<< HEAD
-=======
                     break
->>>>>>> e37d549140f5085723639ef97073e67bb728230f
                 i+=1#For counting measures
         #This interrupts data taking and goes to save the file automatically
         #instead of crashing
@@ -187,13 +188,10 @@ def retreive_all(time=1, iterations=0, sleep= False, filename=None, foldername=N
     else:
         for i in range(iterations):
             print("\nRetreiving value {}...".format(i+1))
-<<<<<<< HEAD
     #        voltages[i] = get_allVoltages()
-=======
     #        voltages[i] = get_allVoltages()        except KeyboardInterrupt:
             print("Terminating...")
             pass
->>>>>>> e37d549140f5085723639ef97073e67bb728230f
             temp_volts = np.array(get_allVoltages())
             temp_volts = np.append(temp_volts, np.round(t.time()-init_time, decimals=2))
             thermo = tc.Thermocouple()
