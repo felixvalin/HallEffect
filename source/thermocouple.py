@@ -21,7 +21,7 @@ class Thermocouple:
             9.286,9.82,10.36,10.905,11.456,12.011,12.572,13.137,13.707,14.281,
             14.86,15.443,16.03,16.621,17.217,17.816,18.42,19.027,19.638,20.252,20.869]);
         else:
-            print "There is no data for requested type";
+            print("There is no data for requested type");
             raise NotImplementedError
         self.interpolation = interp1d(voltage,kelvin,kind='cubic');
     def toKelvin(self,voltage):
